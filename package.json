@@ -1,0 +1,27 @@
+{
+  "name": "ssb-client-basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "standard --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mixmix/ssb-client-basic.git"
+  },
+  "keywords": [],
+  "author": "mixmix",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/mixmix/ssb-client-basic/issues"
+  },
+  "homepage": "https://github.com/mixmix/ssb-client-basic#readme",
+  "dependencies": {
+    "ssb-client": "^4.6.0"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1"
+  }
+}
