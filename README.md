@@ -91,3 +91,62 @@ Notice in the `timestamp` field, that I've not given a time I've given a _time r
 
 The `query` property is an Array because with more advanced queries we can also get the server to map and reduce the data we've got thereby further reducing the amount of data sent over muxrpc to us. I've put a commented out example in the code you can play with.
 
+
+## `v03` - who wrote these posts?
+
+We want to put actual names to the posts we're reading. To keep things simple we're going to get the last name that the author of each post gave to themselves.
+
+So our stream pipeline is gonna be like this :
+```
+  source : start streaming all the posts
+    v
+  through : get the asserted name
+    v
+  sink : collect the results and print them out
+```
+
+I've pulled the source out from v02 and put that in `herlpers/days-posts.js` so go read that to make sure you understand what sort of data is coming out of that source.
+
+The `through` we're using needs to be asynchronous, because to get names, we're hitting the database again. We're gonna use [**pull-paramap**](https://github.com/pull-stream/pull-paramap) because it allows us to run heaps of queries to the database in parallel which is hella fast.
+
+### The query for finding names
+
+Like most things in the scuttleverse how one names things is something which has emerged as a convention. Here's the most common shape of the content part of a naming message : 
+
+```js
+{
+  type: 'about',
+  about: Target,  // the thing you're asserting something about
+  name: String
+}
+```
+
+And here's the full shape of our ssb-query in this case. Notice we are filtering for the about messages where the author of that message is asserting something about themselves (`value.author` and `value.content.about` are both the same).
+Also notice we're performing a `$map` which means the data coming back from this query is only the actual name, and not the whole about message.
+
+```js
+const opts = {
+  limit: 1,
+  reverse: true,
+  query: [
+    {
+      $filter: {
+        value: {
+          author: feedId,
+          content: {
+            type: 'about',
+            about: feedId,
+            name: { $is: 'string' } // there's a name string present
+          }
+        },
+        timestamp: { $gt: 0 } // a hack that forces ordering by timestamp
+      }
+    },
+    {
+      $map: {
+        name: ['value', 'content', 'name']
+      }
+    }
+  ]
+}
+```

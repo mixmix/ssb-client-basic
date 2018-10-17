@@ -7,7 +7,7 @@ Connection((err, server) => {
   if (err) throw err
   console.log('Connection established')
 
-  const rightNow = new Date()
+  const today = new Date()
   const opts = {
     reverse: true,
     query: [
@@ -16,20 +16,20 @@ Connection((err, server) => {
           value: {
             content: { type: 'post' },
             timestamp: {
-              $gte: Number(startOfDay(rightNow)),
-              $lt: Number(startOfDay(rightNow, +1))
+              $gte: Number(startOfDay(today)),
+              $lt: Number(startOfDay(today, +1))
             }
           }
         }
       },
-      // {
-      //   $map: {
-      //     author: ['value', 'author'],
-      //     timestamp: ['value', 'timestamp'],
-      //     text: ['value', 'content', 'text'],
-      //     root: ['value', 'content', 'root'] // the root messages of a thread, this is present if this post is a reply to another message
-      //   }
-      // }
+      {
+        $map: {
+          author: ['value', 'author'],
+          timestamp: ['value', 'timestamp'],
+          text: ['value', 'content', 'text'],
+          root: ['value', 'content', 'root'] // the root messages of a thread, this is present if this post is a reply to another message
+        }
+      }
     ]
   }
 

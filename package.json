@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/mixmix/ssb-client-basic#readme",
   "dependencies": {
+    "pull-paramap": "^1.2.2",
     "ssb-client": "^4.6.0"
   },
   "devDependencies": {
