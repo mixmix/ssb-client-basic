@@ -17,3 +17,32 @@ We're adding no options, which means it will load all the defaults (e.g. use the
 
 We close the connection to the server using `server.close()` otherwise the connection stays open forever!
 
+
+## `v01` - a pull-stream query!
+
+We introduce [**pull-stream**](https://github.com/pull-stream/pull-stream), which is a really common way to handle data in scuttlebutt.
+The basic idea is a every complete pull-stream connects a source of data and runs that into a sink (some output).
+Along the way, your data might go _through_ some steps which filter or modify the data
+
+Have a read of `v01.js` and see if you can guess what it does.
+Run it by running `node v01.js` in the terminal and seeing what comes out.
+_Kick the tyres_ by modifying the code and running it again to see what happens!
+
+```js
+pull(
+  server.query.read(opts),                                // the source
+  pull.filter(msg => msg.value.content.type === 'post'),  // filter 'through'
+  pull.collect(onDone)                                    // the sink
+)
+```
+
+The `pull` function wrapping the source, through, and sink connects these into a complete stream which data will immediately flow through.
+
+The source is provided by [**ssb-query**](https://github.com/dominictarr/ssb-query) which is super fancy, but we'll get to that later. All you need to know now is that opts says "gimme the last 100 messages going _backwards_ from right now".
+
+The `pull.filter` gets passed each one of the results that the source spits out, and we've set it up only to let `post` type messages continue on.
+
+The sink is a `pull.collect`, which waits until the stream is finished (here when we've pulled 100 messages), collecting all the results then passing them as an Array to the callback `onDone`.
+
+
+NOTE - you need to be using a server with the ssb-query plugin installed for this to work (most have this!)
