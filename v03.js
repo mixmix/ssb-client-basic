@@ -73,19 +73,19 @@ Connection((err, server) => {
     )
   }
 
-  function onDone (err, msgs) {
+  function onDone (err, data) {
     if (err) {
       console.error('oh noes', err)
       server.close()
       return
     }
 
-    msgs.forEach(msg => {
+    data.forEach(msg => {
       prettyPrint(msg)
       console.log('------')
     })
 
-    console.log(`${msgs.length} messages`)
+    console.log(`${data.length} messages`)
     console.timeEnd('get posts')
     server.close()
   }

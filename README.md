@@ -150,3 +150,19 @@ const opts = {
   ]
 }
 ```
+
+Extras : all the special query things like `$is` are part of a module called `map-filter-reduce`, and are currently poorly documented. You can read the source for them fairly easily here though : https://github.com/dominictarr/map-filter-reduce/blob/master/simple/maps.js
+
+
+## `v04` - push it into the DOM!
+
+This one you run differently in the terminal: 
+```
+npx electro v04.js
+```
+
+This says "hey use the module electro to run this file instead of node". [**electro**](https://github.com/dominictarr/electro) is a wrapper around [electron](https://electronjs.org/) which makes is super easy to run code like this from the command line.
+
+We're also introducing [**yo-yo**](https://www.npmjs.com/package/yo-yo) which gives you pretty simple templating which looks a lot like html.
+It also doesn't do any fancy auto-updating - if you want to update something you literally call an update method and tell it what you're swapping in.
+
