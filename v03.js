@@ -1,7 +1,7 @@
 const Connection = require('ssb-client')
 const pull = require('pull-stream')
 pull.paraMap = require('pull-paramap')
-const daysPosts = require('./helpers/days-posts')
+const daysPosts = require('./source/days-posts')
 
 console.log('Connecting')
 
