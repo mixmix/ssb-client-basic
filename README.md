@@ -166,3 +166,13 @@ This says "hey use the module electro to run this file instead of node". [**elec
 We're also introducing [**yo-yo**](https://www.npmjs.com/package/yo-yo) which gives you pretty simple templating which looks a lot like html.
 It also doesn't do any fancy auto-updating - if you want to update something you literally call an update method and tell it what you're swapping in.
 
+
+## `v05` - faces to names
+
+not yet documented.
+The blob serving may only work if you're using Patchbay (Patchwork might server blobs over different ports, haven't checked)
+
+- adds `async/get-avatar.js` which is similar but different to `get-name`
+  - uses `pull.take(1)` instead of `limit: 1` because we need to check results coming out are valid before stopping results
+  - uses `ssb-ref` to validate blob links
+
