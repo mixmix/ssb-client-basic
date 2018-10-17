@@ -46,3 +46,48 @@ The sink is a `pull.collect`, which waits until the stream is finished (here whe
 
 
 NOTE - you need to be using a server with the ssb-query plugin installed for this to work (most have this!)
+
+
+##  `v02` - todays post
+
+Instead of just getting the last 100 messages then filtering them down to the `post` messages, we can get the server to do a much tighter query and to send just those results over:
+
+```js
+const opts = {
+  reverse: true,
+  query: [{
+    $filter: {
+      value: {
+        content: { type: 'post' },
+        timestamp: {
+          $gte: 1539687600000,
+          $lt: 1539774000000
+        }
+      }
+    }
+  }]
+}
+```
+
+`reverse: true` means we still get these results in an order that's from the most recent to the oldest.
+
+In ssb-query, the 'special' query-based properties are prefixed with a `$`, so `$filter` means everything inside here use that as a filter. You might notice the _shape_ of the object inside there mostly matches the shape of messages in the databse. i.e.:
+
+```
+{ 
+  key: ....,
+  value: {
+    author: ....
+    content: {
+      type: 'post'
+      ....
+    },
+    timestamp: 1539687602391 // when it was created by the author
+  }
+}
+```
+There are some other fields but we're not querying on them so I've left them off.
+Notice in the `timestamp` field, that I've not given a time I've given a _time range_ : `$gte: 1539687600000` means _greater than or equal to the start of 2018-10-17 in Melbourne Australia_ (relevant because that's the start of the day _subjectivtly_ for me where I am as I write this). `$lt: 1539774000000` means _less than the start of the day following that_
+
+The `query` property is an Array because with more advanced queries we can also get the server to map and reduce the data we've got thereby further reducing the amount of data sent over muxrpc to us. I've put a commented out example in the code you can play with.
+
